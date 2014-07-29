@@ -111,23 +111,27 @@ end
 #EXTINF:10,
 /gitv_live/CCTV-1/C16_1406347931_1406347940.ts
 --]]
+ts_line = res[ts_index]
+the_parts = lua_string_split(ts_line, ':')
+str_sequence = the_parts[5]
 ngx.say('#EXTM3U')
 ngx.say('#EXT-X-TARGETDURATION:10')
-ngx.say('#EXT-X-MEDIA-SEQUENCE:5566')
+ngx.say('#EXT-X-MEDIA-SEQUENCE:', str_sequence)
 for index=ts_index, ts_end, 1
 do
 	ts_line = res[index]
 	--ngx.say(ts_line);
 	the_parts = lua_string_split(ts_line, ':')
-	--1406618591:1406618600:10:0:C103_1406618591_1406618600.ts
+	--1406618591:1406618600:10:0:${sequence}:C103_1406618591_1406618600.ts
 	str_begin_time = the_parts[1]
 	str_end_time = the_parts[2]
 	str_inf = the_parts[3]
 	str_discontinuity = the_parts[4]
-	str_ts_name = the_parts[5]		
+	str_sequence = the_parts[5]
+	str_ts_name = the_parts[6]		
 	ngx.say('#EXTINF:', str_inf);
 	ts_uri = string.format("/%s/%s/%s", live_root, channel_name, str_ts_name);
-	ngx.say(ts_uri)
+	ngx.say(ts_uri);
 	int_discontinuity = tonumber(str_discontinuity, 10);
 	if int_discontinuity ~= 0 then
 		ngx.say('#EXT-X-DISCONTINUITY');
