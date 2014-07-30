@@ -35,7 +35,7 @@ function ts_find_pos(ts_list, time_point)
 		--ngx.say(index, '\t', ts_list[index])
 		local the_parts = lua_string_split(ts_list[index], ':')
 		local ts_time = tonumber(the_parts[1], 10)
-		if ts_time <= time_point then			
+		if ts_time <= time_point then
 			return index
 		end
 		
@@ -46,10 +46,10 @@ end
 -- 变量定义区
 local request_uri   = ngx.var.request_uri;
 local uri           = ngx.var.uri; 
-local query_string	= ngx.var.query_string;
+local query_string  = ngx.var.query_string;
 local args          = ngx.req.get_uri_args();
 local time_now      = os.time();
-local time_delta	= tonumber(args['t'], 10);
+local time_delta    = tonumber(args['t'], 10);
 local time_point    = time_now + time_delta;
 --[[
 ngx.say(request_uri);
@@ -128,7 +128,7 @@ do
 	local str_inf = the_parts[3]
 	local str_discontinuity = the_parts[4]
 	local str_sequence = the_parts[5]
-	local str_ts_name = the_parts[6]		
+	local str_ts_name = the_parts[6]
 	ngx.say('#EXTINF:', str_inf);
 	local ts_uri = string.format("/%s/%s/%s", live_root, channel_name, str_ts_name);
 	ngx.say(ts_uri);
