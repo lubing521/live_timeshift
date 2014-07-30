@@ -33,8 +33,8 @@ function ts_find_pos(ts_list, time_point)
 	for index=#ts_list, 1, -1
 	do
 		--ngx.say(index, '\t', ts_list[index])
-		the_parts = lua_string_split(ts_list[index], ':')
-		ts_time = tonumber(the_parts[1], 10)
+		local the_parts = lua_string_split(ts_list[index], ':')
+		local ts_time = tonumber(the_parts[1], 10)
 		if ts_time <= time_point then			
 			return index
 		end
@@ -60,7 +60,7 @@ ngx.say(time_delta);
 --ngx.say(time_now);
 --ngx.say(time_point);
 
-the_sections = lua_string_split(uri, '/');
+local the_sections = lua_string_split(uri, '/');
 --[[
 for index=1, #the_sections, 1
 do
@@ -68,9 +68,9 @@ do
 end
 --]]
 
-live_root = the_sections[2];
-channel_name = the_sections[3];
-m3u8_name = the_sections[4];
+local live_root = the_sections[2];
+local channel_name = the_sections[3];
+local m3u8_name = the_sections[4];
 --ngx.say('channel:\t', channel_name);
 
 local redis = require "resty.redis"
@@ -95,7 +95,7 @@ if res == ngx.null then
 end
 
 local ts_index = ts_find_pos(res, time_point)
-ts_end = ts_index + 2
+local ts_end = ts_index + 2
 if ts_end > #res then
     ts_end = #res
 end
@@ -111,28 +111,28 @@ end
 #EXTINF:10,
 /gitv_live/CCTV-1/C16_1406347931_1406347940.ts
 --]]
-ts_line = res[ts_index]
-the_parts = lua_string_split(ts_line, ':')
-str_sequence = the_parts[5]
+local ts_line = res[ts_index]
+local the_parts = lua_string_split(ts_line, ':')
+local str_sequence = the_parts[5]
 ngx.say('#EXTM3U')
 ngx.say('#EXT-X-TARGETDURATION:10')
 ngx.say('#EXT-X-MEDIA-SEQUENCE:', str_sequence)
 for index=ts_index, ts_end, 1
 do
-	ts_line = res[index]
+	local ts_line = res[index]
 	--ngx.say(ts_line);
-	the_parts = lua_string_split(ts_line, ':')
+	local the_parts = lua_string_split(ts_line, ':')
 	--1406618591:1406618600:10:0:${sequence}:C103_1406618591_1406618600.ts
-	str_begin_time = the_parts[1]
-	str_end_time = the_parts[2]
-	str_inf = the_parts[3]
-	str_discontinuity = the_parts[4]
-	str_sequence = the_parts[5]
-	str_ts_name = the_parts[6]		
+	local str_begin_time = the_parts[1]
+	local str_end_time = the_parts[2]
+	local str_inf = the_parts[3]
+	local str_discontinuity = the_parts[4]
+	local str_sequence = the_parts[5]
+	local str_ts_name = the_parts[6]		
 	ngx.say('#EXTINF:', str_inf);
-	ts_uri = string.format("/%s/%s/%s", live_root, channel_name, str_ts_name);
+	local ts_uri = string.format("/%s/%s/%s", live_root, channel_name, str_ts_name);
 	ngx.say(ts_uri);
-	int_discontinuity = tonumber(str_discontinuity, 10);
+	local int_discontinuity = tonumber(str_discontinuity, 10);
 	if int_discontinuity ~= 0 then
 		ngx.say('#EXT-X-DISCONTINUITY');
 	end
